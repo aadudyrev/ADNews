@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="DBDocument" representedClassName="DBDocument" syncable="YES" codeGenerationType="category">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="news" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="DBNews" inverseName="image" inverseEntity="DBNews" syncable="YES"/>
+    </entity>
+    <entity name="DBNews" representedClassName="DBNews" syncable="YES" codeGenerationType="category">
+        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="publishedAt" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="DBDocument" inverseName="news" inverseEntity="DBDocument" syncable="YES"/>
+        <relationship name="source" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DBSource" inverseName="news" inverseEntity="DBSource" syncable="YES"/>
+    </entity>
+    <entity name="DBSource" representedClassName="DBSource" syncable="YES" codeGenerationType="category">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="language" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sourcesId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="news" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DBNews" inverseName="source" inverseEntity="DBNews" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="DBDocument" positionX="-18" positionY="108" width="128" height="105"/>
+        <element name="DBNews" positionX="-54" positionY="-9" width="128" height="150"/>
+        <element name="DBSource" positionX="-36" positionY="36" width="128" height="165"/>
+    </elements>
+</model>

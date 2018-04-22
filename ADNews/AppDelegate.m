@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "ADCoreDataManager.h"
+#import "ADMainController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +19,23 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    ADMainController *mainController = [[ADMainController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:mainController];
+    self.window.rootViewController = navController;
+    [self.window makeKeyAndVisible];
+    
+    
+    
+//    NSFetchRequest *request = [DBNews fetchRequest];
+//    NSArray *newsObjects = [[[ADCoreDataManager shared] mainContext] executeFetchRequest:request error:nil];
+//    for (DBNews *news in newsObjects) {
+//        [[[ADCoreDataManager shared] mainContext] deleteObject:news];
+//    }
+//    [[[ADCoreDataManager shared] mainContext] save:nil];
+
+    [[ADCoreDataManager shared] downloadSourcesWithOptions:nil];
+//    [[ADCoreDataManager shared] downloadNewsForType:DBNewsTypeTopHeadlines withOptions:nil];
+    
     return YES;
 }
 

@@ -1,0 +1,29 @@
+//
+//  ADNews.pch
+//  ADNews
+//
+//  Created by Александр Дудырев on 21.04.2018.
+//  Copyright © 2018 Александр Дудырев. All rights reserved.
+//
+
+#ifndef ADNews_pch
+#define ADNews_pch
+
+#import <UIKit/UIKit.h>
+// Core Data
+#import "ADCoreDataManager.h"
+#import "ADNetworkManager.h"
+#import "NSManagedObject+Extension.h"
+
+#import "DBNews.h"
+#import "DBSource.h"
+#import "DBDocument.h"
+
+#import "ADExtension.h"
+#import "ADLabel.h"
+
+#endif /* ADNews_pch */
+
+
+
+
