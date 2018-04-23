@@ -10,7 +10,7 @@
 
 @interface NSManagedObject (Extension)
 
-+ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr inContext:(NSManagedObjectContext *)context;
++ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr type:(NSInteger)type inContext:(NSManagedObjectContext *)context;
 + (NSDictionary *)allObjectsForEntityName:(NSString *)entityName key:(NSString *)key context:(NSManagedObjectContext *)context;
 
 @end

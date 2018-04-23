@@ -11,16 +11,17 @@
 
 @implementation DBNews
 
-+ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)newsArr inContext:(NSManagedObjectContext *)context {
++ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)newsArr type:(NSInteger)newsType inContext:(NSManagedObjectContext *)context {
     NSString *newsClassName = NSStringFromClass([DBNews class]);
     NSString *sourceClassName = NSStringFromClass([DBSource class]);
     NSString *documentClassName = NSStringFromClass([DBDocument class]);
     NSISO8601DateFormatter *df = [[NSISO8601DateFormatter alloc] init];
     
     NSString *newskey = @"url";
-    NSString *sourceKey = @"sourceKey";
+    NSString *sourceKey = @"name";
     NSDictionary *newsData = [self allObjectsForEntityName:newsClassName key:newskey context:context];
-    NSDictionary *sourcesData = [self allObjectsForEntityName:sourceClassName key:sourceKey context:context];
+    NSDictionary *currentSourcesData = [self allObjectsForEntityName:sourceClassName key:sourceKey context:context];
+    NSMutableDictionary *sourcesData = [NSMutableDictionary dictionaryWithDictionary:currentSourcesData];
     
     [context performBlockAndWait:^{
         for (NSDictionary *dict in newsArr) {
@@ -35,13 +36,23 @@
             news.descr          = [dict[@"description"] isKindOfClass:[NSNull class]] ? nil : dict[@"description"];
             news.url            = [dict[@"url"] isKindOfClass:[NSNull class]] ? nil : dict[@"url"];
             news.publishedAt    = [df dateFromString:dict[@"publishedAt"]];
-    
+            news.type           = newsType;
+            news.textForSearch   = [NSString stringWithFormat:@"%@ %@ %@", news.author, news.title, news.descr];
+            
             NSDictionary *sourceDict = dict[@"source"];
             NSString *sourceId = [sourceDict[@"id"] isKindOfClass:[NSNull class]] ? nil : sourceDict[@"id"];
             NSString *sourceName = [sourceDict[@"name"] isKindOfClass:[NSNull class]] ? nil : sourceDict[@"name"];
-            if (sourceId.length && sourceName.length) {
-                NSString *newsSourceKey = [NSString stringWithFormat:@"%@%@",sourceId, sourceName];
-                news.source = sourcesData[newsSourceKey];
+            if (sourceName && sourceName.length > 0) {
+                DBSource *source = sourcesData[sourceName];
+                if (!source) {
+                    source = [NSEntityDescription insertNewObjectForEntityForName:sourceClassName inManagedObjectContext:context];
+                    source.name = sourceName;
+                    source.sourcesId = sourceId;
+                    
+                    sourcesData[sourceName] = source;
+                }
+                [source addNewsObject:news];
+                news.source = source;
             }
             
             DBDocument *document = [NSEntityDescription insertNewObjectForEntityForName:documentClassName inManagedObjectContext:context];

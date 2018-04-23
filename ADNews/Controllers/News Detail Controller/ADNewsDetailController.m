@@ -37,16 +37,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Новость!";
+    self.title = @"News!";
     self.view.backgroundColor = [UIColor whiteColor];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.news.managedObjectContext];
     
     [self configure];
     [self configureWithNews:self.news];
 }
 
 - (void)viewWillLayoutSubviews {
-    
     CGRect bounds = self.view.bounds;
+    bounds.size.height -= CGRectGetHeight(self.tabBarController.tabBar.frame);
     CGFloat imageHeight = 200;
     CGFloat buttonHeight = 30;
     
@@ -63,9 +65,8 @@
     contentSize.height = imageHeight + titleHeight + authorHeight + descrHeight + sourceNameHeight + publishedDateHeight;
     self.scrollView.contentSize = contentSize;
     
-    
-    self.scrollView.frame = CGRectMake(x, CGRectGetMaxY(self.newsImageView.frame), CGRectGetWidth(bounds), CGRectGetHeight(bounds) - buttonHeight);
-    self.urlButton.frame = CGRectMake(x, CGRectGetMaxY(self.scrollView.frame ), width, buttonHeight);
+    self.scrollView.frame = CGRectMake(x, CGRectGetMinY(bounds), CGRectGetWidth(bounds), CGRectGetHeight(bounds) - buttonHeight);
+    self.urlButton.frame = CGRectMake(x, CGRectGetMaxY(self.scrollView.frame), width, buttonHeight);
     
     x = self.scrollView.contentOffset.x;
     width = self.scrollView.contentSize.width;
@@ -76,6 +77,10 @@
     self.newsDescLabel.frame = CGRectMake(x, CGRectGetMaxY(self.newsAuthorLabel.frame ), width, descrHeight);
     self.sourceNameLabel.frame = CGRectMake(x, CGRectGetMaxY(self.newsDescLabel.frame), width, sourceNameHeight);
     self.newsPublishedDateLabel.frame = CGRectMake(x, CGRectGetMaxY(self.sourceNameLabel.frame), width, publishedDateHeight);
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:self.news];
 }
 
 - (void)configure {
@@ -181,6 +186,20 @@
     }
 }
 
+#pragma mark - Notification
+
+- (void)reloadData:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSSet *updated = userInfo[NSUpdatedObjectsKey];
+    NSSet *deleted = userInfo[NSDeletedObjectsKey];
+    if ([updated containsObject:self.news]) {
+        [self configureWithNews:self.news];
+        [self.view setNeedsLayout];
+    }
+    if ([deleted containsObject:self.news]) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 
 #pragma mark - Actions
 

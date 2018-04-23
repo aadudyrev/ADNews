@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DBSource : NSManagedObject
 
-@property (nonatomic, strong) NSString *sourceKey;
 
 @end
 

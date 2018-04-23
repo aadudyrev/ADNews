@@ -122,7 +122,7 @@ NSString * const ADOptionSortBy     = @"sortBy";
 
 - (NSString *)stringWithEndPoint:(NSString *)endPoint andOptions:(NSDictionary *)options {
     NSString *urlString = [NSString stringWithFormat:@"%@%@", defaultURLString, endPoint];
-    NSMutableString *optionsStr = [[NSMutableString alloc] init];
+    NSMutableString *mOptionsStr = [[NSMutableString alloc] init];
     NSInteger count = options.count;
     for (NSInteger i = 0; i < count; i++) {
         NSString *key = options.allKeys[i];
@@ -130,9 +130,10 @@ NSString * const ADOptionSortBy     = @"sortBy";
         if (i < count - 1) {
             [tmpStr stringByAppendingString:@"&"];
         }
-        [optionsStr appendString:tmpStr];
+        [mOptionsStr appendString:tmpStr];
     }
-    
+    NSCharacterSet *pathCharSet = [NSCharacterSet URLPathAllowedCharacterSet];
+    NSString *optionsStr = [mOptionsStr stringByAddingPercentEncodingWithAllowedCharacters:pathCharSet];
     return [urlString stringByAppendingString:optionsStr];
 }
 

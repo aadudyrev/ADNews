@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ADMainController : UIViewController
+@interface ADMainController : UIViewController <ADTabBarProtocol>
+
+- (instancetype)initWithType:(DBNewsType)type;
 
 @end

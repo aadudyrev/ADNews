@@ -27,4 +27,7 @@ typedef NS_ENUM(NSUInteger, DBNewsType) {
 // загружаем документы
 - (void)downloadDocument:(NSManagedObject *)object;
 
+// удаляем объекты
+- (void)deleteAllObjectsForEntityName:(NSString *)name;
+
 @end

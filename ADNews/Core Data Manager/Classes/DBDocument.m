@@ -42,7 +42,7 @@
 
 - (void)didChangeValueForKey:(NSString *)key {
     [super didChangeValueForKey:key];
-    if ([key isEqualToString:@"status"] || [key isEqualToString:@"path"]) {
+    if ([key isEqualToString:@"status"]) {
         [self.news willChangeValueForKey:@"image"];
         [self.news didChangeValueForKey:@"image"];
     }

@@ -11,15 +11,7 @@
 
 @implementation DBSource
 
-@synthesize sourceKey = _sourceKey;
-- (NSString *)sourceKey {
-    if (!_sourceKey) {
-        _sourceKey = [NSString stringWithFormat:@"%@%@", self.sourcesId, self.name];
-    }
-    return _sourceKey;
-}
-
-+ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr inContext:(NSManagedObjectContext *)context {
++ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr type:(NSInteger)type inContext:(NSManagedObjectContext *)context {
     NSString *className = NSStringFromClass([DBSource class]);
     NSString *key = @"url";
     NSDictionary *sourcesData = [self allObjectsForEntityName:className key:key context:context];

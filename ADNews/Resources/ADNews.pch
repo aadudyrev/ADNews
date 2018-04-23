@@ -19,6 +19,7 @@
 #import "DBSource.h"
 #import "DBDocument.h"
 
+#import "ADProtocols.h"
 #import "ADExtension.h"
 #import "ADLabel.h"
 

@@ -61,6 +61,9 @@
             break;
         case DBNewsTypeEverything:
             requestType = ADRequestTypeEverything;
+            if (!options || !options.count) {
+                return;
+            }
             break;
         default:
             return;
@@ -75,7 +78,7 @@
         if (!news || news.count == 0) {
             return;
         }
-        [DBNews insertObjectsFrom:news inContext:weakSelf.persistentContainer.viewContext];
+        [DBNews insertObjectsFrom:news type:newsType inContext:weakSelf.persistentContainer.viewContext];
     }];
 }
 
@@ -90,7 +93,7 @@
         if (!sources || sources.count == 0) {
             return;
         }        
-        [DBSource insertObjectsFrom:sources inContext:weakSelf.persistentContainer.viewContext];
+        [DBSource insertObjectsFrom:sources type:0 inContext:weakSelf.persistentContainer.viewContext];
     }];
 }
 
@@ -139,6 +142,23 @@
             }
         }];
     }];
+}
+
+
+- (void)deleteAllObjectsForEntityName:(NSString *)name {
+    if (!name) {
+        return;
+    }
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:name];
+    NSArray *objects = [[[ADCoreDataManager shared] mainContext] executeFetchRequest:request error:nil];
+    for (DBNews *news in objects) {
+        [[[ADCoreDataManager shared] mainContext] deleteObject:news];
+    }
+    NSError *error;
+    if (![[[ADCoreDataManager shared] mainContext] save:&error]) {
+        NSLog(@"%@\n%@", error.localizedDescription, error.userInfo);
+    }
+    
 }
 
 @end

@@ -25,7 +25,7 @@
     return [NSDictionary dictionaryWithDictionary:mDict];
 }
 
-+ (void)insertObjectsFrom:(NSArray<NSDictionary *> *)sourcesArr inContext:(NSManagedObjectContext *)context {
++ (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr type:(NSInteger)type inContext:(NSManagedObjectContext *)context {
     NSAssert(NO, @"Метод должен быть перегружен");
 }
 
