@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7735AEAB208A742E00F35B00 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7735AEAA208A742E00F35B00 /* AppDelegate.m */; };
-		7735AEB1208A742E00F35B00 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7735AEAF208A742E00F35B00 /* Main.storyboard */; };
 		7735AEB3208A743000F35B00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7735AEB2208A743000F35B00 /* Assets.xcassets */; };
 		7735AEB6208A743000F35B00 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7735AEB4208A743000F35B00 /* LaunchScreen.storyboard */; };
 		7735AEB9208A743000F35B00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7735AEB8208A743000F35B00 /* main.m */; };
@@ -23,6 +22,8 @@
 		7735AEF2208B6DEB00F35B00 /* DBNews.m in Sources */ = {isa = PBXBuildFile; fileRef = 7735AEF0208B6DEB00F35B00 /* DBNews.m */; };
 		7735AEF8208B71AB00F35B00 /* DBSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7735AEF6208B71AB00F35B00 /* DBSource.m */; };
 		7735AEFD208BDB5900F35B00 /* NSManagedObject+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7735AEFC208BDB5900F35B00 /* NSManagedObject+Extension.m */; };
+		7766E539208FD0D800D3AFA7 /* ADSourcesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7766E538208FD0D800D3AFA7 /* ADSourcesController.m */; };
+		7766E53B208FE39100D3AFA7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7766E53A208FE39100D3AFA7 /* Settings.bundle */; };
 		77A0AC6D208CA95B007B4221 /* DBDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A0AC6B208CA95B007B4221 /* DBDocument.m */; };
 		77A0AC72208D0CB9007B4221 /* ADNewsDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A0AC71208D0CB9007B4221 /* ADNewsDetailController.m */; };
 		77A0AC76208D2BE3007B4221 /* ADTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 77A0AC75208D2BE3007B4221 /* ADTabBarController.m */; };
@@ -32,7 +33,6 @@
 		7735AEA6208A742E00F35B00 /* ADNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ADNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7735AEA9208A742E00F35B00 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7735AEAA208A742E00F35B00 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		7735AEB0208A742E00F35B00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7735AEB2208A743000F35B00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7735AEB5208A743000F35B00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7735AEB7208A743000F35B00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,6 +59,9 @@
 		7735AEFB208BDB5900F35B00 /* NSManagedObject+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+Extension.h"; sourceTree = "<group>"; };
 		7735AEFC208BDB5900F35B00 /* NSManagedObject+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Extension.m"; sourceTree = "<group>"; };
 		7766E531208E89E400D3AFA7 /* ADProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADProtocols.h; sourceTree = "<group>"; };
+		7766E537208FD0D800D3AFA7 /* ADSourcesController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADSourcesController.h; sourceTree = "<group>"; };
+		7766E538208FD0D800D3AFA7 /* ADSourcesController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADSourcesController.m; sourceTree = "<group>"; };
+		7766E53A208FE39100D3AFA7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		77A0AC6A208CA95B007B4221 /* DBDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DBDocument.h; sourceTree = "<group>"; };
 		77A0AC6B208CA95B007B4221 /* DBDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DBDocument.m; sourceTree = "<group>"; };
 		77A0AC70208D0CB9007B4221 /* ADNewsDetailController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADNewsDetailController.h; sourceTree = "<group>"; };
@@ -105,10 +108,10 @@
 				7735AEDD208B41DE00F35B00 /* Network Manager */,
 				7735AEC2208A745600F35B00 /* Core Data Manager */,
 				7735AED9208A9C5D00F35B00 /* Resources */,
-				7735AEAF208A742E00F35B00 /* Main.storyboard */,
 				7735AEB2208A743000F35B00 /* Assets.xcassets */,
 				7735AEB4208A743000F35B00 /* LaunchScreen.storyboard */,
 				7735AEB7208A743000F35B00 /* Info.plist */,
+				7766E53A208FE39100D3AFA7 /* Settings.bundle */,
 				7735AEB8208A743000F35B00 /* main.m */,
 			);
 			path = ADNews;
@@ -139,6 +142,7 @@
 				77A0AC73208D2BB8007B4221 /* Tab Bar Controller */,
 				7735AECD208A847100F35B00 /* Main Controller */,
 				77A0AC6F208D0C77007B4221 /* News Detail Controller */,
+				7766E536208FD0B000D3AFA7 /* Sources Controller */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -189,6 +193,15 @@
 				77A0AC6B208CA95B007B4221 /* DBDocument.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		7766E536208FD0B000D3AFA7 /* Sources Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7766E537208FD0D800D3AFA7 /* ADSourcesController.h */,
+				7766E538208FD0D800D3AFA7 /* ADSourcesController.m */,
+			);
+			path = "Sources Controller";
 			sourceTree = "<group>";
 		};
 		77A0AC6F208D0C77007B4221 /* News Detail Controller */ = {
@@ -267,8 +280,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7735AEB6208A743000F35B00 /* LaunchScreen.storyboard in Resources */,
+				7766E53B208FE39100D3AFA7 /* Settings.bundle in Resources */,
 				7735AEB3208A743000F35B00 /* Assets.xcassets in Resources */,
-				7735AEB1208A742E00F35B00 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +305,7 @@
 				7735AEFD208BDB5900F35B00 /* NSManagedObject+Extension.m in Sources */,
 				7735AED8208A9C5100F35B00 /* ADExtension.m in Sources */,
 				7735AEB9208A743000F35B00 /* main.m in Sources */,
+				7766E539208FD0D800D3AFA7 /* ADSourcesController.m in Sources */,
 				7735AEE0208B420200F35B00 /* ADNetworkManager.m in Sources */,
 				7735AEAB208A742E00F35B00 /* AppDelegate.m in Sources */,
 			);
@@ -300,14 +314,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		7735AEAF208A742E00F35B00 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7735AEB0208A742E00F35B00 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7735AEB4208A743000F35B00 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

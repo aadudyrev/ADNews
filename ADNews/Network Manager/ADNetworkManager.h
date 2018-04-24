@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef void(^DataComplitionHandler)( NSDictionary * _Nullable data);
+typedef void(^DataErrorHandler)( NSError * _Nullable error);
 typedef void(^DownloadComplitionHandler)(NSURL * _Nullable location);
 
 typedef NS_ENUM(NSUInteger, ADRequestType) {
@@ -17,6 +18,7 @@ typedef NS_ENUM(NSUInteger, ADRequestType) {
     ADRequestTypeSource,
 };
 
+// параметры для запроса
 extern NSString * const ADOptionCountry;
 extern NSString * const ADOptionCategory;
 extern NSString * const ADOptionSources;
@@ -34,6 +36,14 @@ extern NSString * const ADOptionSortBy;
 
 + (ADNetworkManager *)shared;
 
-- (void)getObjectsForType:(ADRequestType)newsType options:(NSDictionary *)options complitionHandler:(DataComplitionHandler)complitionHandler;
-- (void)getDocumentFor:(NSURL *)url withComplitionHandler:(DownloadComplitionHandler)complitionHandler;
+// загружаем json
+- (void)getObjectsForType:(ADRequestType)newsType
+                  options:(NSDictionary *)options
+        complitionHandler:(DataComplitionHandler)complitionHandler
+             errorHandler:(DataErrorHandler)errorHandler;
+
+// загружаем документ
+- (void)getDocumentFor:(NSURL *)url
+ withComplitionHandler:(DownloadComplitionHandler)complitionHandler;
+
 @end

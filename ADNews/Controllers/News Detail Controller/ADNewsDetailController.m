@@ -40,6 +40,7 @@
     self.title = @"News!";
     self.view.backgroundColor = [UIColor whiteColor];
     
+    // подпишемся на изменение контекста
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadData:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.news.managedObjectContext];
     
     [self configure];
@@ -47,10 +48,12 @@
 }
 
 - (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
     CGRect bounds = self.view.bounds;
     bounds.size.height -= CGRectGetHeight(self.tabBarController.tabBar.frame);
     CGFloat imageHeight = 200;
-    CGFloat buttonHeight = 30;
+    CGFloat buttonHeight = 40;
     
     CGSize contentSize = CGSizeMake(CGRectGetWidth(bounds), 0);
     CGFloat titleHeight = [self.newsTitleLabel heightForWidth:contentSize.width];
@@ -79,7 +82,10 @@
     self.newsPublishedDateLabel.frame = CGRectMake(x, CGRectGetMaxY(self.sourceNameLabel.frame), width, publishedDateHeight);
 }
 
-- (void)dealloc {
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    // отпишемся от нотификаций
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:self.news];
 }
 
@@ -118,12 +124,13 @@
     self.newsPublishedDateLabel.insets = UIEdgeInsetsMake(5, 5, 5, 5);
     [self.scrollView addSubview:self.newsPublishedDateLabel];
     
-    NSString *buttonStr = @"Перейти на сайт";
+    NSString *buttonStr = @"Go to news";
+    NSDictionary *atrb = @{
+                           NSFontAttributeName : [UIFont italicSystemFontOfSize:16.f],
+                           NSForegroundColorAttributeName : [UIColor blueColor],
+                           };
     NSAttributedString *normalStateStr = [[NSAttributedString alloc] initWithString:buttonStr
-                                                                         attributes:@{
-                                                                                      NSFontAttributeName : [UIFont systemFontOfSize:14.f],
-                                                                                      NSForegroundColorAttributeName : [UIColor blackColor],
-                                                                                      }];
+                                                                         attributes:atrb];
     self.urlButton = [[UIButton alloc] initWithFrame:CGRectZero];
     [self.urlButton addTarget:self action:@selector(urlButtonTaped:) forControlEvents:UIControlEventTouchUpInside];
     [self.urlButton setAttributedTitle:normalStateStr forState:UIControlStateNormal];
@@ -134,7 +141,9 @@
     self.newsTitleLabel.text = news.title ? news.title : @"";
     self.newsAuthorLabel.text = news.author ? news.author : @"";
     self.newsDescLabel.text = news.descr ? news.descr : @"";
-    self.newsImageView.image = [news.image getImage];
+    
+    UIImage *image = [news.image newsImage] ? [news.image newsImage] : [UIImage imageNamed:@"def-icon-news"];
+    self.newsImageView.image = image;
     
     NSMutableParagraphStyle *mParagraph = [[NSMutableParagraphStyle alloc] init];
     [mParagraph setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
@@ -142,9 +151,7 @@
     mParagraph.alignment = NSTextAlignmentLeft;
     
     if (self.news.publishedAt) {
-        NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        df.dateStyle = NSDateFormatterLongStyle;
-        df.dateFormat = @"E, d MMM yyyy HH:mm:ss";
+        NSDateFormatter *df = [NSDateFormatter longDf];
         NSString *dateStr = [df stringFromDate:self.news.publishedAt];
         NSMutableAttributedString *mAtrbStr = [[NSMutableAttributedString alloc] init];
         NSAttributedString *dateAtrbStr;

@@ -14,6 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// статусы загрузки
 typedef NS_ENUM(NSUInteger, DBDocumentStatus) {
     DBDocumentStatusNotDownloaded,
     DBDocumentStatusInDownloadProcess,
@@ -24,8 +25,10 @@ typedef NS_ENUM(NSUInteger, DBDocumentStatus) {
 
 @interface DBDocument : NSManagedObject
 
+@property (nonatomic, strong) UIImage *newsImage;
+
+// хеш от url
 - (NSString *)fileName;
-- (UIImage *)getImage;
 
 @end
 

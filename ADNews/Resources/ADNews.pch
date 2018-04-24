@@ -12,13 +12,15 @@
 #import <UIKit/UIKit.h>
 // Core Data
 #import "ADCoreDataManager.h"
-#import "ADNetworkManager.h"
 #import "NSManagedObject+Extension.h"
-
 #import "DBNews.h"
 #import "DBSource.h"
 #import "DBDocument.h"
 
+// Networking
+#import "ADNetworkManager.h"
+
+// Other
 #import "ADProtocols.h"
 #import "ADExtension.h"
 #import "ADLabel.h"

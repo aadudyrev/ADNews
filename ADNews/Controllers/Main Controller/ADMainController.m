@@ -16,7 +16,6 @@
 @property (nonatomic, assign) DBNewsType newsType;
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *objects;
 @property (nonatomic, strong) NSFetchedResultsController *frc;
 
 @property (nonatomic, strong) UISearchBar *searchBar;
@@ -24,7 +23,7 @@
 
 @end
 
-static NSString *cellIdentifier = @"cell";
+static NSString *cellIdentifier = @"newsCell";
 
 @implementation ADMainController
 
@@ -54,7 +53,6 @@ static NSString *cellIdentifier = @"cell";
             self.title = @"Breaking";
             UIBarButtonItem *bbItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(updateNews)];
             self.navigationItem.rightBarButtonItem = bbItem;
-
         }
             break;
         case DBNewsTypeEverything: {
@@ -62,15 +60,10 @@ static NSString *cellIdentifier = @"cell";
             self.searchBar.delegate = self;
             [self.searchBar setEnablesReturnKeyAutomatically:NO];
             self.navigationItem.titleView = self.searchBar;
-            UIBarButtonItem *bbItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(showHistory)];
-            self.navigationItem.rightBarButtonItem = bbItem;
-            
         }
         default:
             break;
     }
-    
-    
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [self.tableView registerClass:[ADMainCell class] forCellReuseIdentifier:cellIdentifier];
@@ -82,11 +75,8 @@ static NSString *cellIdentifier = @"cell";
     [self frc];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [[ADCoreDataManager shared] downloadNewsForType:self.newsType withOptions:nil];
-}
-
 - (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
     self.tableView.frame = self.view.bounds;
 }
 
@@ -154,10 +144,11 @@ static NSString *cellIdentifier = @"cell";
 
 #pragma mark Actions
 
+// обновляем новости
 - (void)updateNews {
     switch (self.newsType) {
         case DBNewsTypeTopHeadlines:
-            [[ADCoreDataManager shared] downloadNewsForType:DBNewsTypeEverything withOptions:nil];
+            [[ADCoreDataManager shared] downloadNewsForType:DBNewsTypeTopHeadlines withOptions:nil];
             break;
         case DBNewsTypeEverything: {
             if (self.searchText && self.searchText.length != 0) {
@@ -171,10 +162,6 @@ static NSString *cellIdentifier = @"cell";
         default:
             break;
     }
-}
-
-- (void)showHistory {
-    
 }
 
 #pragma mark TableView DataSource
@@ -195,7 +182,7 @@ static NSString *cellIdentifier = @"cell";
         cell = [[ADMainCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     
-    DBNews *news = [self.frc.sections[indexPath.section] objects][indexPath.row];
+    DBNews *news = [self.frc objectAtIndexPath:indexPath];
     [cell configureWithNews:news];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -209,10 +196,12 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // ячейка считает высоту
     ADMainCell *cell = [[ADMainCell alloc] init];
     DBNews *news = [self.frc.sections[indexPath.section] objects][indexPath.row];
     [cell configureWithNews:news];
-    return [cell getHeightForWidth:CGRectGetWidth(tableView.frame) - 35];
+    CGFloat accessoryWidth = 33.f;
+    return [cell getHeightForWidth:CGRectGetWidth(tableView.frame) - accessoryWidth];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -220,8 +209,7 @@ static NSString *cellIdentifier = @"cell";
         [self.searchBar resignFirstResponder];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    id <NSFetchedResultsSectionInfo> section = [[self.frc sections] objectAtIndex:indexPath.section];
-    DBNews *news = [[section objects] objectAtIndex:indexPath.row];
+    DBNews *news = [self.frc objectAtIndexPath:indexPath];
     ADNewsDetailController *detailVC = [[ADNewsDetailController alloc] initWithNews:news];
     
     [self.navigationController pushViewController:detailVC animated:YES];
@@ -237,7 +225,7 @@ static NSString *cellIdentifier = @"cell";
       newIndexPath:(nullable NSIndexPath *)newIndexPath {
     switch (type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -264,7 +252,8 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller  {
-    [self.tableView endUpdates];}
+    [self.tableView endUpdates];
+}
 
 
 

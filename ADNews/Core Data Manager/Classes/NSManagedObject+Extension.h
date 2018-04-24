@@ -10,7 +10,9 @@
 
 @interface NSManagedObject (Extension)
 
+// парсим json
 + (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr type:(NSInteger)type inContext:(NSManagedObjectContext *)context;
+// вернем уже сохраненные объекты
 + (NSDictionary *)allObjectsForEntityName:(NSString *)entityName key:(NSString *)key context:(NSManagedObjectContext *)context;
 
 @end

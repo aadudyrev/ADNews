@@ -24,6 +24,7 @@ NSString * const ADOptionLanguage   = @"language";
 NSString * const ADOptionSortBy     = @"sortBy";
 
 @interface ADNetworkManager () <NSURLSessionDelegate>
+
 @end
 
 @implementation ADNetworkManager
@@ -42,16 +43,17 @@ NSString * const ADOptionSortBy     = @"sortBy";
     
 }
 
-- (void)getObjectsForType:(ADRequestType)newsType options:(NSDictionary *)options complitionHandler:(DataComplitionHandler)complitionHandler {
+- (void)getObjectsForType:(ADRequestType)newsType
+                  options:(NSDictionary *)options
+        complitionHandler:(DataComplitionHandler)complitionHandler
+             errorHandler:(DataErrorHandler)errorHandler{
     NSString *endPoint;
     switch (newsType) {
         case ADRequestTypeTopHeadlines:
             endPoint = @"top-headlines?";
-            options = options ? options : @{ADOptionCountry : @"ru"};
             break;
         case ADRequestTypeEverything:
             endPoint = @"everything?";
-            options = options ? options : @{ADOptionKeywords : @"footbal"};
             break;
         case ADRequestTypeSource:
             endPoint = @"sources?";
@@ -60,11 +62,12 @@ NSString * const ADOptionSortBy     = @"sortBy";
             break;
     }
     NSURLRequest *request = [self requestWithEndpoints:endPoint options:options];
-    NSURLSessionTask *task = [self dataTaskWithRequest:request withComplitionHandler:complitionHandler];
+    NSURLSessionTask *task = [self dataTaskWithRequest:request withComplitionHandler:complitionHandler andErrorHandler:errorHandler];
     [task resume];
 }
 
-- (void)getDocumentFor:(NSURL *)url withComplitionHandler:(DownloadComplitionHandler)complitionHandler {
+- (void)getDocumentFor:(NSURL *)url
+ withComplitionHandler:(DownloadComplitionHandler)complitionHandler {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
     NSURLSessionTask *downloadTask = [self downloadTaskWithRequest:request withComplitionHandler:complitionHandler];
@@ -76,24 +79,57 @@ NSString * const ADOptionSortBy     = @"sortBy";
     NSURL *url = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
+    // apikey ставим в заголовки
     [request setValue:apiKey forHTTPHeaderField:@"X-Api-Key"];
     return request;
 }
 
-- (NSURLSessionTask *)dataTaskWithRequest:(NSURLRequest *)request withComplitionHandler:(DataComplitionHandler)complitionHandler {
-//    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-//    NSURLSession *session = [NSURLSession sessionWithConfiguration:conf];
+- (NSURLSessionTask *)dataTaskWithRequest:(NSURLRequest *)request withComplitionHandler:(DataComplitionHandler)complitionHandler andErrorHandler:(DataErrorHandler)errorHandler {
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error != nil) {
             NSLog(@"%@\n%@", error.localizedDescription, error.userInfo);
+            if (errorHandler) {
+                errorHandler(error);
+            }
             return;
         }
         
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        switch (httpResponse.statusCode) {
+            case 200:
+                break;
+            case 401: {
+                NSDictionary *userInfo = @{
+                                           NSLocalizedDescriptionKey : @"Ошибка авторизации",
+                                           };
+                error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+            }
+            default: {
+                NSDictionary *userInfo = @{
+                                           NSLocalizedDescriptionKey : @"Ошибка при выполнении запроса",
+                                           };
+                error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+            }
+        }
+        if (error != nil) {
+            NSLog(@"%@\n%@", error.localizedDescription, error.userInfo);
+            if (errorHandler) {
+                errorHandler(error);
+            }
+            return;
+        }
         NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
         if (error != nil) {
             NSLog(@"%@\n%@", error.localizedDescription, error.userInfo);
-            abort();
+            NSDictionary *userInfo = @{
+                                       NSLocalizedDescriptionKey : @"Ошибка при обработке данных",
+                                       };
+            error = [NSError errorWithDomain:NSURLErrorDomain code:404 userInfo:userInfo];
+            if (errorHandler) {
+                errorHandler(error);
+            }
+            return;
         }
         if (complitionHandler) {
             complitionHandler(json);
@@ -103,9 +139,8 @@ NSString * const ADOptionSortBy     = @"sortBy";
     return dataTask;
 }
 
-- (NSURLSessionTask *)downloadTaskWithRequest:(NSURLRequest *)request withComplitionHandler:(DownloadComplitionHandler)complitionHandler {
-//    NSURLSessionConfiguration *conf = [NSURLSessionConfiguration defaultSessionConfiguration];
-//    NSURLSession *session = [NSURLSession sessionWithConfiguration:conf];
+- (NSURLSessionTask *)downloadTaskWithRequest:(NSURLRequest *)request
+                        withComplitionHandler:(DownloadComplitionHandler)complitionHandler {
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error != nil) {
@@ -116,7 +151,6 @@ NSString * const ADOptionSortBy     = @"sortBy";
             complitionHandler(location);
         }
     }];
-//    NSLog(@"request to URL: %@", request.URL.absoluteString);
     return downloadTask;
 }
 
@@ -132,6 +166,7 @@ NSString * const ADOptionSortBy     = @"sortBy";
         }
         [mOptionsStr appendString:tmpStr];
     }
+    // для кириллицы
     NSCharacterSet *pathCharSet = [NSCharacterSet URLPathAllowedCharacterSet];
     NSString *optionsStr = [mOptionsStr stringByAddingPercentEncodingWithAllowedCharacters:pathCharSet];
     return [urlString stringByAppendingString:optionsStr];
@@ -145,7 +180,6 @@ didFinishDownloadingToURL:(NSURL *)location {
     
 }
 
-/* Sent periodically to notify the delegate of download progress. */
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
       didWriteData:(int64_t)bytesWritten
  totalBytesWritten:(int64_t)totalBytesWritten

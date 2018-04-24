@@ -9,10 +9,10 @@
 #import "ADTabBarController.h"
 
 #import "ADMainController.h"
+#import "ADSourcesController.h"
 
 @interface ADTabBarController ()
 
-@property (nonatomic, assign) NSInteger index;
 @property (nonatomic, strong) NSArray <UIViewController <ADTabBarProtocol> *> *controllers;
 
 @end
@@ -23,7 +23,7 @@
 {
     self = [super init];
     if (self) {
-        self.index = index;
+        
     }
     return self;
 }
@@ -33,9 +33,10 @@
     NSArray *viewControllers = @[
                                  [[ADMainController alloc] initWithType:DBNewsTypeTopHeadlines],
                                  [[ADMainController alloc] initWithType:DBNewsTypeEverything],
+                                 [[ADSourcesController alloc] init],
                                  ];
     
-    [self setViewControllers:viewControllers];    
+    [self setViewControllers:viewControllers];
     for (NSInteger i = 0; i < self.tabBar.items.count; i++) {
         UIViewController <ADTabBarProtocol> *vc = viewControllers[i];
         UITabBarItem *item = self.tabBar.items[i];

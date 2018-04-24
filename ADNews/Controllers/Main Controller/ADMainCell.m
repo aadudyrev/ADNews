@@ -12,6 +12,8 @@
 
 @interface ADMainCell ()
 
+@property (nonatomic, strong) DBNews *news;
+
 @property (nonatomic, strong) ADLabel *newsTitleLabel;
 @property (nonatomic, strong) ADLabel *newsAuthorLabel;
 @property (nonatomic, strong) ADLabel *newsDescLabel;
@@ -59,23 +61,26 @@
     self.newsAuthorLabel.font = [UIFont italicSystemFontOfSize:10.f];
     self.newsAuthorLabel.textColor = [UIColor lightGrayColor];
     self.newsAuthorLabel.numberOfLines = 1;
-    self.newsAuthorLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.newsAuthorLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.contentView addSubview:self.newsAuthorLabel];
     
     self.newsDescLabel = [[ADLabel alloc] initWithFrame:CGRectZero];
     self.newsDescLabel.insets = labelInsets;
     self.newsDescLabel.font = [UIFont systemFontOfSize:13.f];
     self.newsDescLabel.textColor = [UIColor blackColor];
-    self.newsDescLabel.numberOfLines = 1;
+    self.newsDescLabel.numberOfLines = 2;
     self.newsDescLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     [self.contentView addSubview:self.newsDescLabel];
 }
 
 - (void)configureWithNews:(DBNews *)news {
+    self.news = news;
+    
     self.newsTitleLabel.text = news.title;
     self.newsAuthorLabel.text = news.author;
     self.newsDescLabel.text = news.descr;
-    self.newsImageView.image = [news.image getImage];
+    
+    self.newsImageView.image = nil;
 }
 
 - (CGFloat)getHeightForWidth:(CGFloat)width {
@@ -106,6 +111,10 @@
     CGFloat y = CGRectGetMinY(bounds) + imageInsets.top;
     CGFloat width = imageSize.width;
     CGFloat height = imageSize.height;
+    
+    UIImage *newsImage = self.news.image.newsImage;
+    UIImage *image = newsImage ? newsImage : [UIImage imageNamed:@"def-icon-news"];
+    self.newsImageView.image = image;
     self.newsImageView.frame = CGRectMake(x, y, width, height);
 
     x += width + imageInsets.right;
@@ -123,11 +132,6 @@
     width = CGRectGetWidth(bounds);
     height = [self.newsDescLabel heightForWidth:width];
     self.newsDescLabel.frame = CGRectMake(x, y, width, height);
-    
-    CGFloat compareHeight = CGRectGetMaxY(self.newsDescLabel.frame) - contentInsets.top - CGRectGetHeight(bounds);
-    if (compareHeight > 1 || compareHeight < -1) {
-        NSLog(@"%@ - %.2f - %.2f", NSStringFromCGRect(bounds), CGRectGetHeight(bounds), compareHeight);
-    }
 }
 
 @end

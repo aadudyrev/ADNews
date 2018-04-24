@@ -12,6 +12,4 @@
 
 - (instancetype)initWithNews:(DBNews *)news;
 
-- (void)configureWithNews:(DBNews *)news;
-
 @end

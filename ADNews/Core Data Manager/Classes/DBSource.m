@@ -13,7 +13,7 @@
 
 + (void)insertObjectsFrom:(NSArray <NSDictionary *> *)sourcesArr type:(NSInteger)type inContext:(NSManagedObjectContext *)context {
     NSString *className = NSStringFromClass([DBSource class]);
-    NSString *key = @"url";
+    NSString *key = @"name";
     NSDictionary *sourcesData = [self allObjectsForEntityName:className key:key context:context];
     
     [context performBlockAndWait:^{

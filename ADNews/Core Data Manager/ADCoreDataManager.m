@@ -58,9 +58,12 @@
     switch (newsType) {
         case DBNewsTypeTopHeadlines:
             requestType = ADRequestTypeTopHeadlines;
+            // ставим параметр, если нечего нет
+            options = options ? options : @{ADOptionCountry : @"ru"};
             break;
         case DBNewsTypeEverything:
             requestType = ADRequestTypeEverything;
+            // такой запрос не будем отправлять
             if (!options || !options.count) {
                 return;
             }
@@ -76,13 +79,19 @@
         }
         NSArray *news = data[@"articles"];
         if (!news || news.count == 0) {
+            [self showMessage:@"Некорректный запрос" withTitle:@"Ошибка"];
             return;
         }
-        [DBNews insertObjectsFrom:news type:newsType inContext:weakSelf.persistentContainer.viewContext];
+        // парсим json
+        [DBNews insertObjectsFrom:news type:newsType inContext:weakSelf.mainContext];
+    } errorHandler:^(NSError * _Nullable error) {
+        [self showMessage:error.localizedDescription withTitle:@"Ошибка"];
     }];
+    
 }
 
 - (void)downloadSourcesWithOptions:(NSDictionary *)options {
+    options = options ? options : @{ADOptionCountry : @"ru"};
     ADNetworkManager *networkManager = [ADNetworkManager shared];
     __weak ADCoreDataManager *weakSelf = self;
     [networkManager getObjectsForType:ADRequestTypeSource options:options complitionHandler:^(NSDictionary * _Nullable data) {
@@ -91,9 +100,13 @@
         }
         NSArray *sources = data[@"sources"];
         if (!sources || sources.count == 0) {
+            [self showMessage:@"Некорректный запрос" withTitle:@"Ошибка"];
             return;
-        }        
-        [DBSource insertObjectsFrom:sources type:0 inContext:weakSelf.persistentContainer.viewContext];
+        }
+        // парсим json
+        [DBSource insertObjectsFrom:sources type:0 inContext:weakSelf.mainContext];
+    } errorHandler:^(NSError * _Nullable error) {
+        [self showMessage:error.localizedDescription withTitle:@"Ошибка"];
     }];
 }
 
@@ -159,6 +172,19 @@
         NSLog(@"%@\n%@", error.localizedDescription, error.userInfo);
     }
     
+}
+
+- (void)showMessage:(NSString *)message withTitle:(NSString *)title {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        UIViewController *vc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+        [vc presentViewController:alertController animated:YES completion:^{
+            
+        }];
+    });
 }
 
 @end

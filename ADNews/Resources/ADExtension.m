@@ -17,8 +17,18 @@ CGFloat widthForInsets(UIEdgeInsets insets) {
     return insets.left + insets.right;
 }
 
+@implementation NSDateFormatter (Ext)
 
-@implementation NSString (Generator)
++ (NSDateFormatter *)longDf {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    df.dateStyle = NSDateFormatterLongStyle;
+    df.dateFormat = @"E, d MMM yyyy HH:mm:ss";
+    return df;
+}
+
+@end
+
+@implementation NSString (Ext)
 
 - (NSString *)MD5String {
     const char *cStr = [self UTF8String];
@@ -35,7 +45,7 @@ CGFloat widthForInsets(UIEdgeInsets insets) {
 }
 
 + (NSString *)generateStringWithLenght:(NSInteger)lenght {
-    static NSString *characters = @"abcdefghij klmnopqrstuvwxyzABCD EFGHIJKLMNOPQRSTUV WXYZ012345 6789";
+    static NSString *characters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
     
     if (!lenght) {
         lenght = arc4random() % 240;
@@ -54,7 +64,7 @@ CGFloat widthForInsets(UIEdgeInsets insets) {
 @end
 
 
-@implementation NSFileManager (Extension)
+@implementation NSFileManager (Ext)
 
 + (NSURL *)userDirectory {
     NSFileManager *fileManager = [NSFileManager defaultManager];

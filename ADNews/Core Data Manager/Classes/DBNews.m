@@ -28,6 +28,7 @@
             NSString *url = dict[newskey];
             DBNews *news = newsData[url];
             if (news != nil) {
+                // такую уже загружали
                 continue;
             }
             news = [NSEntityDescription insertNewObjectForEntityForName:newsClassName inManagedObjectContext:context];
@@ -43,18 +44,21 @@
             NSString *sourceId = [sourceDict[@"id"] isKindOfClass:[NSNull class]] ? nil : sourceDict[@"id"];
             NSString *sourceName = [sourceDict[@"name"] isKindOfClass:[NSNull class]] ? nil : sourceDict[@"name"];
             if (sourceName && sourceName.length > 0) {
+                // связываем новость с источником
                 DBSource *source = sourcesData[sourceName];
                 if (!source) {
                     source = [NSEntityDescription insertNewObjectForEntityForName:sourceClassName inManagedObjectContext:context];
                     source.name = sourceName;
                     source.sourcesId = sourceId;
                     
+                    // добавляем источник в словарь для дальнейшего поиска
                     sourcesData[sourceName] = source;
                 }
                 [source addNewsObject:news];
                 news.source = source;
             }
             
+            // добавляем документ
             DBDocument *document = [NSEntityDescription insertNewObjectForEntityForName:documentClassName inManagedObjectContext:context];
             document.url = [dict[@"urlToImage"] isKindOfClass:[NSNull class]] ? nil : dict[@"urlToImage"];
             document.status = DBDocumentStatusNotDownloaded;

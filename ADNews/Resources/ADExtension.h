@@ -14,19 +14,25 @@ CGFloat heightForInsets(UIEdgeInsets insets);
 CGFloat widthForInsets(UIEdgeInsets insets);
 
 
+@interface NSDateFormatter (Ext)
 
++ (NSDateFormatter *)longDf;
 
-@interface NSString (Generator)
+@end
+
+@interface NSString (Ext)
 
 - (NSString *)MD5String;
 + (NSString *)generateStringWithLenght:(NSInteger)lenght;
 
 @end
 
-@interface NSFileManager (Extension)
-
+@interface NSFileManager (Ext)
+// директория пользователя
 + (NSURL *)userDirectory;
+// директория для изображений (документов)
 + (NSURL *)imageDirectory;
+// удаляем файл 
 + (void)removeItemAtPath:(NSString *)path;
 
 @end

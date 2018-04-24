@@ -10,8 +10,10 @@
 
 @interface ADLabel : UILabel
 
+// отступы текста
 @property (nonatomic, assign) UIEdgeInsets insets;
 
+// считаем высоту по attributedText
 - (CGFloat)heightForWidth:(CGFloat)width;
 
 @end
